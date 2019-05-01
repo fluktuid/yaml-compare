@@ -1,23 +1,43 @@
 package node
 
 import (
+	"errors"
 	"fmt"
-	"regexp"
+	"strings"
+	h "yaml-compare/helper"
 )
+
+const FILE = "FILE"
+const BLOCK = "BLOCK"
 
 type Node struct {
 	Value    string
 	parent   *Node
 	children []*Node
 	Indent   int
+	lineType []LineType
 }
 
-func NewNode(value string) *Node {
-	return &Node{Value: value, Indent: getIndent(value)}
+func NewFile() *Node {
+	return &Node{Value: FILE, Indent: -2}
+}
+func newBlock(value string) *Node {
+	return &Node{Value: BLOCK, Indent: -1, lineType: *getLineTypes(value)}
+}
+
+func New(value string) (*Node, error) {
+	v := strings.Trim(h.RemoveComment(value), " ")
+	if len(v) == 0 {
+		return nil, errors.New("node: Comment String")
+	} else if h.Matches(v, "-{3}(\\s+[>|])?") {
+		return newBlock(v), nil
+	} else {
+		return &Node{Value: v, Indent: h.Indent(value), lineType: *getLineTypes(v)}, nil
+	}
 }
 
 func (n Node) ToString() {
-	fmt.Println(n.Indent, "->", n.Value)
+	fmt.Println(n.Indent, "->", n.Value, "\t\t", strings.Trim(strings.Join(strings.Fields(fmt.Sprint(n.lineType)), ","), "[]"))
 	for _, c := range n.children {
 		c.ToString()
 	}
@@ -36,7 +56,38 @@ func (n *Node) GetIndentParent(node *Node) *Node {
 	return parent
 }
 
-func getIndent(line string) int {
-	r, _ := regexp.Compile("^\\s*")
-	return len(r.FindString(line))
+func (n *Node) DeleteChild(child *Node) bool {
+	i := h.SliceIndex(len(n.children)-1, func(i int) bool {
+		return n.children[i] == child
+	})
+	if i < 0 {
+		return false
+	}
+
+	copy(n.children[i:], n.children[i+1:])
+	n.children[len(n.children)-1] = nil // or the zero value of T
+	n.children = n.children[:len(n.children)-1]
+
+	return true
+}
+
+func (n *Node) DeleteSelf() bool {
+	if n.parent == nil {
+		return false
+	}
+	return n.parent.DeleteChild(n)
+}
+
+func (n *Node) Clean() bool {
+	if strings.Compare(n.Value, FILE) == 0 && len(n.children) > 0 {
+		for i := 0; i < len(n.children); {
+			cleaned := n.children[i].Clean()
+			if !cleaned {
+				i++
+			}
+		}
+	} else if strings.Compare(n.Value, BLOCK) == 0 && len(n.children) == 0 && n.parent != nil {
+		return n.DeleteSelf()
+	}
+	return false
 }

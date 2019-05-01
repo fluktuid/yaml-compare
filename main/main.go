@@ -35,15 +35,21 @@ func main() {
 }
 
 func toNode(lines []string) *node.Node {
-	root := node.Node{Value: "FILE", Indent: -1}
-	lastLineNode := &root
+	rootP := node.NewFile()
+	blockP, _ := node.New("---")
+	rootP.AddChildren(blockP)
+	lastLineNode := blockP
 	for _, line := range lines {
-		var nP = node.NewNode(line)
+		nP, _ := node.New(line)
 
-		parent := lastLineNode.GetIndentParent(nP)
-		parent.AddChildren(nP)
-
-		lastLineNode = nP
+		if nP != nil {
+			parent := lastLineNode.GetIndentParent(nP)
+			parent.AddChildren(nP)
+			lastLineNode = nP
+		}
 	}
-	return &root
+	rootP.Clean()
+	// TODO: add possibility to turn resolve off via flag
+	rootP.ResolveAnchors()
+	return rootP
 }
