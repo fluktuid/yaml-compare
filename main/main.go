@@ -8,14 +8,8 @@ import (
 	"io"
 	"os"
 	"regexp"
+	"yaml-compare/node"
 )
-
-type Node struct {
-	value    string
-	parent   *Node
-	children []*Node
-	indent   int
-}
 
 func main() {
 	//	wordPtr := flag.String("word", "foo", "a string")
@@ -39,34 +33,23 @@ func main() {
 		lines, _ := readFileWithReadLine(file)
 		//		fmt.Println(lines)
 		//		fmt.Println("===")
-		node := toNode(lines)
-		toString(&node)
+		n := toNode(lines)
+		n.ToString()
 	}
 }
 
-func toString(node *Node) {
-	println(node.indent, ":", node.value)
-	for _, c := range node.children {
-		toString(c)
-	}
-}
-
-func toNode(lines []string) Node {
-	root := Node{value: "FILE", parent: nil, indent: -1}
+func toNode(lines []string) *node.Node {
+	root := node.Node{Value: "FILE", Indent: -1}
 	lastLineNode := &root
 	for _, line := range lines {
-		var node = Node{value: line, indent: getIndent(line)}
+		var nP = node.NewNode(line)
 
-		parent := lastLineNode
-		for parent.indent >= node.indent {
-			parent = (*parent).parent
-		}
-		node.parent = parent
-		parent.children = append(parent.children, &node)
+		parent := lastLineNode.GetIndentParent(nP)
+		parent.AddChildren(nP)
 
-		lastLineNode = &node
+		lastLineNode = nP
 	}
-	return root
+	return &root
 }
 
 func getIndent(line string) int {
