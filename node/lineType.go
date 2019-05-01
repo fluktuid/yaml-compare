@@ -26,18 +26,6 @@ const (
 
 func getLineTypes(s string) *[]LineType {
 	var types []LineType
-	/*
-	   if (str.matches(Regex("(.)*&\\S+(.)*")))
-	       lineTypes.add(YamlSkill.ANCHOR)
-	   if (str.matches(Regex("(.)*\\*\\S+(.)*")))
-	       lineTypes.add(YamlSkill.POINTER)
-	   if (str.matches(Regex("(.)*\\S+\\s+\\|\\s*$")))
-	       lineTypes.add(YamlSkill.LITERAL_BLOCK)
-	   if (str.matches(Regex("(.)*\\S+\\s+>\\s*$")))
-	       lineTypes.add(YamlSkill.FOLDED_BLOCK)
-	   if (str.matches(Regex("\\s*<<:\\s+(.)*$")))
-	       lineTypes.add(YamlSkill.POINTER_OBJECT)
-	*/
 	if h.Matches(s, "^\\s*-\\s+\\S+") {
 		types = append(types, ListItem)
 	}
@@ -50,7 +38,10 @@ func getLineTypes(s string) *[]LineType {
 	if h.Matches(s, "&\\S+") {
 		types = append(types, Anchor)
 	}
-	if h.Matches(s, "\\*\\S+") {
+
+	if h.Matches(s, "\\s*<<:\\s+\\S+\\s*$") {
+		types = append(types, PointerObject)
+	} else if h.Matches(s, "\\*\\S+") {
 		types = append(types, Pointer)
 	}
 	if h.Matches(s, "\\S+\\s+\\|\\s*$") {
@@ -59,9 +50,5 @@ func getLineTypes(s string) *[]LineType {
 	if h.Matches(s, "\\S+\\s+>\\s*$") {
 		types = append(types, FoldedBlock)
 	}
-	if h.Matches(s, "\\s*<<:\\s+\\S+\\s*$") {
-		types = append(types, PointerObject)
-	}
-
 	return &types
 }

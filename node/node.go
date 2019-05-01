@@ -3,6 +3,7 @@ package node
 import (
 	"errors"
 	"fmt"
+	"regexp"
 	"strings"
 	h "yaml-compare/helper"
 )
@@ -43,9 +44,11 @@ func (n Node) ToString() {
 	}
 }
 
-func (n *Node) AddChildren(child *Node) {
-	n.children = append(n.children, child)
-	child.parent = n
+func (n *Node) AddChildren(child ...*Node) {
+	n.children = append(n.children, child...)
+	for _, c := range child {
+		c.parent = n
+	}
 }
 
 func (n *Node) GetIndentParent(node *Node) *Node {
@@ -90,4 +93,10 @@ func (n *Node) Clean() bool {
 		return n.DeleteSelf()
 	}
 	return false
+}
+
+func (n *Node) getKey() string {
+	r, _ := regexp.Compile("\\S+:")
+	r0, _ := regexp.Compile(":")
+	return r0.ReplaceAllString(r.FindString(n.Value), ":")
 }
