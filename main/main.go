@@ -1,59 +1,49 @@
 package main
 
 import (
-	"flag"
+	"errors"
 	"fmt"
+	flag "github.com/spf13/pflag"
+	"os"
 	"yaml-compare/files"
 	"yaml-compare/node"
 )
 
 func main() {
-	//	wordPtr := flag.String("word", "foo", "a string")
-	//	numbPtr := flag.Int("numb", 42, "an int")
-	//	boolPtr := flag.Bool("fork", false, "a bool")
+	resolveAnchors := flag.BoolP("resolve-anchors", "R", false, "Resolve Yaml Anchors, e.g. '&id001'")
 
-	//	var svar string
-	//	flag.StringVar(&svar, "svar", "bar", "a string var")
+	// TODO: implement
+	printLineTypes := flag.BoolP("print-line-types", "L", false, "Print the Line Types, e.g. 'ListItem'")
+
+	// TODO: implement
+	bewareAnchors := flag.BoolP("beware-anchors", "A", false, "Resolve Yaml Anchors, e.g. '&id001'")
+
+	// TODO: implement
+	bewarePointer := flag.BoolP("beware-pointer", "P", false, "Resolve Yaml Anchors, e.g. '&id001'")
+	// TODO: implement
+	fullQualifierName := flag.BoolP("full-qualifier-name", "f", false, "Resolve Yaml Anchors, e.g. '&id001'")
 	flag.Parse()
 
-	//	fmt.Println("word:", *wordPtr)
-	//	fmt.Println("numb:", *numbPtr)
-	//	fmt.Println("fork:", *boolPtr)
-	//	fmt.Println("svar:", svar)
-
 	arguments := flag.Args()
-
-	fmt.Println(arguments)
+	if len(arguments) != 2 {
+		_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", errors.New("please set two Files"))
+		os.Exit(1)
+		return
+	}
+	config := node.Config{
+		ResolveAnchors:    *resolveAnchors,
+		PrintLineTypes:    *printLineTypes,
+		BewareAnchors:     *bewareAnchors,
+		BewarePointer:     *bewarePointer,
+		FullQualifierName: *fullQualifierName,
+	}
 
 	var roots []*node.Node
 	for _, file := range arguments {
 		lines, _ := files.ReadFileWithReadLine(file)
-		//		fmt.Println(lines)
-		//		fmt.Println("===")
-		n := toNode(lines)
-		//		n.Print()
+		n := node.ToNode(lines, config)
 		roots = append(roots, n)
 	}
 	difference := roots[0].Compare(roots[1])
 	difference.PrintBy(1)
-}
-
-func toNode(lines []string) *node.Node {
-	rootP := node.NewFile()
-	blockP, _ := node.New("---")
-	rootP.AddChildren(blockP)
-	lastLineNode := blockP
-	for _, line := range lines {
-		nP, _ := node.New(line)
-
-		if nP != nil {
-			parent := lastLineNode.GetIndentParent(nP)
-			parent.AddChildren(nP)
-			lastLineNode = nP
-		}
-	}
-	rootP.Clean()
-	// TODO: add possibility to turn resolve off via flag
-	rootP.ResolveAnchors()
-	return rootP
 }

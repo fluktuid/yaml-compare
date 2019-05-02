@@ -16,7 +16,7 @@ type Node struct {
 	parent   *Node
 	children []*Node
 	Indent   int
-	lineType []LineType
+	lineType []lineType
 	status   ChangeStatus
 }
 
@@ -46,22 +46,28 @@ func (n *Node) Print() {
 }
 
 func (n *Node) PrintBy(indent int) {
-	if n.status != 0 {
-		fmt.Print(string(n.status))
-	} else {
-		fmt.Print(" ")
-	}
 	nIndent := n.Indent
 	if nIndent < 0 {
 		nIndent = 0
 	}
-	for i := 0; i < indent+nIndent; i++ {
-		fmt.Print(" ")
+	if n.Value != FILE {
+		if n.status != 0 {
+			fmt.Print(string(n.status))
+		} else {
+			fmt.Print(" ")
+		}
+		for i := 0; i < indent+nIndent; i++ {
+			fmt.Print(" ")
+		}
+		if n.Value == BLOCK {
+			fmt.Print("---")
+		} else {
+			fmt.Print(n.Value)
+		}
+		fmt.Println()
 	}
-	fmt.Print(n.Value)
-	fmt.Println()
 	for _, c := range n.children {
-		c.PrintBy(indent + n.Indent)
+		c.PrintBy(indent + nIndent)
 	}
 }
 

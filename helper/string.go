@@ -34,6 +34,14 @@ func Matches(s string, regex string) bool {
 	return r.MatchString(s)
 }
 
+func Get(s string, regex string) string {
+	r, e := regexp.Compile(regex)
+	if e != nil {
+		return ""
+	}
+	return r.FindString(s)
+}
+
 func Indent(line string) int {
 	r, _ := regexp.Compile("^\\s*")
 	return len(r.FindString(line))

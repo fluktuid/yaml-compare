@@ -6,7 +6,7 @@ import (
 	h "yaml-compare/helper"
 )
 
-func (n *Node) ResolveAnchors() {
+func (n *Node) resolveAnchors() {
 	anchors, pointers, objPointers := n.getAnchorsAndPointers()
 	resolve(anchors, pointers, objPointers)
 }
@@ -74,7 +74,7 @@ func resolve(anchors *[]*Node, pointers *[]*Node, objectPointers *[]*Node) {
 	}
 }
 
-func contains(s []LineType, e LineType) bool {
+func contains(s []lineType, e lineType) bool {
 	for _, a := range s {
 		if a == e {
 			return true
