@@ -31,7 +31,7 @@ func main() {
 		//		fmt.Println(lines)
 		//		fmt.Println("===")
 		n := toNode(lines)
-		n.Print()
+		//		n.Print()
 		roots = append(roots, n)
 	}
 	difference := roots[0].Compare(roots[1])
