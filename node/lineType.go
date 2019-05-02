@@ -24,6 +24,11 @@ const (
 	FoldedBlock      LineType = 14 // currently unused // represents >
 )
 
+// TODO: Maps fixen:
+// - key0: value0		(Node0)
+//   key1: value1		(Node1)
+// führt dazu, dass Node0 als Child Node1 hält
+// Es müsste jedoch jedoch einen gemeinsamen Parent geben, der beide Objekte hält.
 func getLineTypes(s string) *[]LineType {
 	var types []LineType
 	if h.Matches(s, "^\\s*-\\s+\\S+") {
@@ -38,7 +43,6 @@ func getLineTypes(s string) *[]LineType {
 	if h.Matches(s, "&\\S+") {
 		types = append(types, Anchor)
 	}
-
 	if h.Matches(s, "\\s*<<:\\s+\\S+\\s*$") {
 		types = append(types, PointerObject)
 	} else if h.Matches(s, "\\*\\S+") {
