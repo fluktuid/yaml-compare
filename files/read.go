@@ -10,7 +10,6 @@ import (
 
 func ReadFileWithReadLine(fn string) ([]string, error) {
 	var rows []string
-	fmt.Println("readFileWithReadLine")
 
 	file, err := os.Open(fn)
 	defer file.Close()

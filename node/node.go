@@ -17,6 +17,7 @@ type Node struct {
 	children []*Node
 	Indent   int
 	lineType []LineType
+	status   ChangeStatus
 }
 
 func NewFile() *Node {
@@ -41,6 +42,26 @@ func (n *Node) Print() {
 	fmt.Println(n.Indent, "->", n.Value, "\t\t", strings.Trim(strings.Join(strings.Fields(fmt.Sprint(n.lineType)), ","), "[]"))
 	for _, c := range n.children {
 		c.Print()
+	}
+}
+
+func (n *Node) PrintBy(indent int) {
+	if n.status != 0 {
+		fmt.Print(string(n.status))
+	} else {
+		fmt.Print(" ")
+	}
+	nIndent := n.Indent
+	if nIndent < 0 {
+		nIndent = 0
+	}
+	for i := 0; i < indent+nIndent; i++ {
+		fmt.Print(" ")
+	}
+	fmt.Print(n.Value)
+	fmt.Println()
+	for _, c := range n.children {
+		c.PrintBy(indent + n.Indent)
 	}
 }
 
@@ -91,8 +112,20 @@ func (n *Node) Clean() bool {
 		}
 	} else if strings.Compare(n.Value, BLOCK) == 0 && len(n.children) == 0 && n.parent != nil {
 		return n.DeleteSelf()
+	} else if len(n.children) > 0 {
+		n.cleanChildren()
 	}
 	return false
+}
+
+func (n *Node) cleanChildren() {
+	var r []*Node
+	for _, e := range n.children {
+		if e != nil {
+			r = append(r, e)
+		}
+	}
+	n.children = r
 }
 
 func (n *Node) getKey() string {

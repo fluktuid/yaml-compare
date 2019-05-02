@@ -4,7 +4,7 @@ import (
 	h "yaml-compare/helper"
 )
 
-type LineType int
+type LineType byte
 
 const (
 	ListItem         LineType = 0

@@ -35,7 +35,7 @@ func main() {
 		roots = append(roots, n)
 	}
 	difference := roots[0].Compare(roots[1])
-	difference.Print()
+	difference.PrintBy(1)
 }
 
 func toNode(lines []string) *node.Node {
