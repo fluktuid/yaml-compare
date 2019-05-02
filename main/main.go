@@ -25,13 +25,17 @@ func main() {
 
 	fmt.Println(arguments)
 
+	var roots []*node.Node
 	for _, file := range arguments {
 		lines, _ := files.ReadFileWithReadLine(file)
 		//		fmt.Println(lines)
 		//		fmt.Println("===")
 		n := toNode(lines)
-		n.ToString()
+		n.Print()
+		roots = append(roots, n)
 	}
+	difference := roots[0].Compare(roots[1])
+	difference.Print()
 }
 
 func toNode(lines []string) *node.Node {

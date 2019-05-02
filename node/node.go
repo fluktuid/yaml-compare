@@ -37,10 +37,10 @@ func New(value string) (*Node, error) {
 	}
 }
 
-func (n Node) ToString() {
+func (n *Node) Print() {
 	fmt.Println(n.Indent, "->", n.Value, "\t\t", strings.Trim(strings.Join(strings.Fields(fmt.Sprint(n.lineType)), ","), "[]"))
 	for _, c := range n.children {
-		c.ToString()
+		c.Print()
 	}
 }
 
@@ -99,4 +99,20 @@ func (n *Node) getKey() string {
 	r, _ := regexp.Compile("\\S+:")
 	r0, _ := regexp.Compile(":")
 	return r0.ReplaceAllString(r.FindString(n.Value), ":")
+}
+
+func (n *Node) copy() *Node {
+	copied := *n
+	return &copied
+}
+
+func (n *Node) deepCopy() *Node {
+	copied := n.copy()
+
+	newChilds := make([]*Node, len(n.children))
+	for i, child := range n.children {
+		newChilds[i] = child.deepCopy()
+	}
+	copied.children = newChilds
+	return copied
 }
