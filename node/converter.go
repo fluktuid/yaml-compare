@@ -5,7 +5,9 @@ type Config struct {
 	PrintLineTypes    bool
 	BewareAnchors     bool
 	BewarePointer     bool
+	printFull         bool
 	FullQualifierName bool
+	PrintComplete     bool
 }
 
 func ToNode(lines []string, config Config) *Node {

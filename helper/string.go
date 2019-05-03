@@ -1,6 +1,9 @@
 package helper
 
-import "regexp"
+import (
+	"regexp"
+	"strconv"
+)
 
 func RemoveComment(s string) string {
 	r, _ := regexp.Compile("#")
@@ -12,10 +15,27 @@ func RemoveComment(s string) string {
 }
 
 func Trim(s string) string {
-	r, _ := regexp.Compile("^\\s+")
-	s = r.ReplaceAllString(s, "")
-	r, _ = regexp.Compile("\\s+$")
+	r, _ := regexp.Compile("(^\\s+|\\s+$)")
 	return r.ReplaceAllString(s, "")
+}
+
+func TrimExt(s string) string {
+	r, _ := regexp.Compile("(^\\s+|\\s+$|:|-\\s+)")
+	return r.ReplaceAllString(s, "")
+}
+
+func MapListString(s string, position int) *string {
+	// full key match: "^(\\s*\\-\\s+)?(\\S[^\\.]+)"
+	r, _ := regexp.Compile("(\\S[^.]+)")
+	var pos = r.FindStringIndex(s)
+	if pos != nil {
+		s = s[:pos[1]]
+	}
+	if position < 0 {
+		return &s
+	}
+	s = s + "[" + strconv.Itoa(position) + "]"
+	return &s
 }
 
 func Remove(s string, regex string) string {

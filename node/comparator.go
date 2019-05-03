@@ -6,11 +6,17 @@ import (
 	h "yaml-compare/helper"
 )
 
-func (n *Node) Compare(other *Node) *Node {
-	return n.getDifference(other)
+func (n *Node) Compare(other *Node, config Config) *Node {
+	if config.FullQualifierName {
+		file := NewFile()
+		file.children = *n.getDifference(other, config).flattern()
+		return file
+	} else {
+		return n.getDifference(other, config)
+	}
 }
 
-func (n *Node) getDifference(other *Node) *Node {
+func (n *Node) getDifference(other *Node, config Config) *Node {
 	if n.same(other) {
 		return nil
 	}
@@ -30,7 +36,7 @@ func (n *Node) getDifference(other *Node) *Node {
 			continue
 		}
 
-		r, _ := regexp.Compile("\\:(.)*$") //Compile("^\\s*\\-?\\s*\\S+\\:\\s+")
+		r, _ := regexp.Compile(":(.)*$") //Compile("^\\s*\\-?\\s*\\S+:\\s+")
 
 		vVal := r.ReplaceAllString(v.Value, "")
 		if len(vVal) == 0 {
@@ -111,9 +117,11 @@ func (n *Node) getDifference(other *Node) *Node {
 	var differentChilds []*Node
 	for _, v := range joined {
 		if v.first != nil && v.second != nil {
-			change := append(differentChilds, v.first.getDifference(v.second))
+			change := v.first.getDifference(v.second, config)
 			if change != nil {
-				differentChilds = change
+				differentChilds = append(differentChilds, change)
+			} else if config.PrintComplete {
+				differentChilds = append(differentChilds, v.second)
 			}
 		} else if v.first != nil {
 			if v.first.status != CHANGED {
@@ -122,6 +130,7 @@ func (n *Node) getDifference(other *Node) *Node {
 			differentChilds = append(differentChilds, v.first)
 		} else if v.second != nil {
 			v.second.status = ADDED
+			v.second.setChildStatus(ADDED)
 			differentChilds = append(differentChilds, v.second)
 		}
 	}
@@ -132,12 +141,38 @@ func (n *Node) getDifference(other *Node) *Node {
 	return difference
 }
 
+func (n *Node) setChildStatus(status ChangeStatus) {
+	for _, v := range n.children {
+		v.status = status
+		if len(v.children) > 0 {
+			v.setChildStatus(status)
+		}
+	}
+}
+
 type Pair struct {
 	first  *Node
 	second *Node
 }
 
+func (n Node) flattern() *[]*Node {
+	var a []*Node
+	if len(n.children) > 0 {
+		for _, v := range n.children {
+			a = append(a, *v.flattern()...)
+		}
+	} else {
+		if n.status != UNDEFINED {
+			a = append(a, &n)
+		}
+	}
+	return &a
+}
+
 func (n *Node) same(other *Node) bool {
+	if n == nil || other == nil {
+		return false
+	}
 	if n.Value != other.Value {
 		return false
 	}

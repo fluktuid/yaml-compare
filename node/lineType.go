@@ -65,3 +65,40 @@ func getLineTypes(s string) *[]lineType {
 
 	return &types
 }
+
+func (l lineType) toString() string {
+	switch l {
+	case ListItem:
+		return "ListItem"
+	case KeyValueItem:
+		return "KeyValueItem"
+	case Object:
+		return "Object"
+	case Anchor:
+		return "Anchor"
+	case Pointer:
+		return "Pointer"
+	case PointerObject:
+		return "PointerObject"
+	case ScalarTypeString:
+		return "!!str"
+	case ScalarTypeFloat:
+		return "!!float"
+	case ScalarTypeInt:
+		return "!!int"
+	case ScalarTypeBool:
+		return "!!bool"
+	case ScalarTypeNull:
+		return "!!null"
+	case ScalarTypeBinary:
+		return "!!binary"
+	case ScalarTypeDate:
+		return "!!date"
+	case LiteralBlock:
+		return "|"
+	case FoldedBlock:
+		return ">"
+	default:
+		return ""
+	}
+}

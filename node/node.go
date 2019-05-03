@@ -45,7 +45,7 @@ func (n *Node) Print() {
 	}
 }
 
-func (n *Node) PrintBy(indent int) {
+func (n *Node) PrintBy(indent int, config Config) {
 	nIndent := n.Indent
 	if nIndent < 0 {
 		nIndent = 0
@@ -56,18 +56,49 @@ func (n *Node) PrintBy(indent int) {
 		} else {
 			fmt.Print(" ")
 		}
-		for i := 0; i < indent+nIndent; i++ {
-			fmt.Print(" ")
-		}
-		if n.Value == BLOCK {
-			fmt.Print("---")
+		selfPosition := -1
+		if config.FullQualifierName {
+			name := ""
+			p := n
+			for p.parent != nil && p.Value != BLOCK {
+				if len(name) == 0 {
+					name = h.TrimExt(p.Value)
+				} else if n.Value == BLOCK {
+					fmt.Print("---")
+				} else {
+					name = *h.MapListString(h.TrimExt(p.Value), selfPosition) + "." + name
+					selfPosition = h.SliceIndex(len(p.children), func(i int) bool {
+						return p.children[i].Value == n.Value
+					})
+				}
+				p = p.parent
+			}
+			name = *h.MapListString("", selfPosition) + name
+			fmt.Print(name)
 		} else {
-			fmt.Print(n.Value)
+			for i := 0; i < indent+nIndent; i++ {
+				fmt.Print(" ")
+			}
+			if n.Value == BLOCK {
+				fmt.Print("---")
+			} else {
+				fmt.Print(n.Value)
+			}
+		}
+		if config.PrintLineTypes {
+			if len(n.lineType) > 0 {
+				fmt.Print("\t\t[ ")
+				for _, v := range n.lineType {
+					fmt.Printf(v.toString() + " ")
+				}
+				fmt.Print("]")
+			}
 		}
 		fmt.Println()
+
 	}
 	for _, c := range n.children {
-		c.PrintBy(indent + nIndent)
+		c.PrintBy(indent+nIndent, config)
 	}
 }
 
