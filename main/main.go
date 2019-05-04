@@ -16,11 +16,11 @@ func main() {
 	printComplete := flag.BoolP("print-complete", "c", false, "Print the complete diff file after comparing")
 	colorLess := flag.BoolP("white", "w", false, "Print without color")
 	// TODO: implement
-	bewareAnchors := flag.BoolP("beware-anchors", "A", false, "Resolve Yaml Anchors, e.g. '&id001'")
+	bewareAnchors := flag.BoolP("beware-anchors", "A", false, "Beware anchor names while resolving")
 	// TODO: implement
-	bewarePointer := flag.BoolP("beware-pointer", "P", false, "Resolve Yaml Anchors, e.g. '&id001'")
+	bewarePointer := flag.BoolP("beware-pointer", "P", false, "Beware pointer names while resolving")
 	// TODO: implement
-	fullQualifierName := flag.BoolP("full-qualifier-name", "f", false, "Resolve Yaml Anchors, e.g. '&id001'")
+	fullQualifierName := flag.BoolP("full-qualifier-name", "f", false, "use full-qualifier names, e.g. 'step[0].instrument'")
 	flag.Parse()
 
 	arguments := flag.Args()
