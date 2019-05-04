@@ -14,6 +14,7 @@ func main() {
 	printLineTypes := flag.BoolP("print-line-types", "L", false, "Print the Line Types, e.g. 'ListItem'")
 	printFiles := flag.BoolP("print", "p", false, "Print files after anchor resolving")
 	printComplete := flag.BoolP("print-complete", "c", false, "Print the complete diff file after comparing")
+	colorLess := flag.BoolP("white", "w", false, "Print without color")
 	// TODO: implement
 	bewareAnchors := flag.BoolP("beware-anchors", "A", false, "Resolve Yaml Anchors, e.g. '&id001'")
 	// TODO: implement
@@ -23,8 +24,8 @@ func main() {
 	flag.Parse()
 
 	arguments := flag.Args()
-	if len(arguments) != 2 {
-		_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", errors.New("please set two Files"))
+	if len(arguments) < 1 || len(arguments) > 2 {
+		_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", errors.New("please specify one or two Files"))
 		os.Exit(1)
 		return
 	}
@@ -35,18 +36,22 @@ func main() {
 		BewarePointer:     *bewarePointer,
 		FullQualifierName: *fullQualifierName,
 		PrintComplete:     *printComplete,
+		ColorLess:         *colorLess,
 	}
 
 	var roots []*node.Node
 	for _, file := range arguments {
 		lines, _ := files.ReadFileWithReadLine(file)
 		n := node.ToNode(lines, config)
-		if *printFiles {
+		if *printFiles || len(arguments) == 1 {
+			fmt.Println(file)
 			n.PrintBy(0, config)
 			fmt.Println("==========")
 		}
 		roots = append(roots, n)
 	}
-	difference := roots[0].Compare(roots[1], config)
-	difference.PrintBy(1, config)
+	if len(arguments) == 2 {
+		difference := roots[0].Compare(roots[1], config)
+		difference.PrintBy(1, config)
+	}
 }

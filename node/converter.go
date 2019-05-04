@@ -8,6 +8,7 @@ type Config struct {
 	printFull         bool
 	FullQualifierName bool
 	PrintComplete     bool
+	ColorLess         bool
 }
 
 func ToNode(lines []string, config Config) *Node {

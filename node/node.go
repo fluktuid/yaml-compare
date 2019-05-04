@@ -3,6 +3,7 @@ package node
 import (
 	"errors"
 	"fmt"
+	. "github.com/logrusorgru/aurora"
 	"regexp"
 	"strings"
 	h "yaml-compare/helper"
@@ -51,10 +52,11 @@ func (n *Node) PrintBy(indent int, config Config) {
 		nIndent = 0
 	}
 	if n.Value != FILE {
+		var out = ""
 		if n.status != 0 {
-			fmt.Print(string(n.status))
+			out += string(n.status)
 		} else {
-			fmt.Print(" ")
+			out += " "
 		}
 		selfPosition := -1
 		if config.FullQualifierName {
@@ -74,27 +76,42 @@ func (n *Node) PrintBy(indent int, config Config) {
 				p = p.parent
 			}
 			name = *h.MapListString("", selfPosition) + name
-			fmt.Print(name)
+			out += name
 		} else {
 			for i := 0; i < indent+nIndent; i++ {
-				fmt.Print(" ")
+				out += " "
 			}
 			if n.Value == BLOCK {
-				fmt.Print("---")
+				out += "---"
 			} else {
-				fmt.Print(n.Value)
+				out += n.Value
 			}
 		}
 		if config.PrintLineTypes {
 			if len(n.lineType) > 0 {
-				fmt.Print("\t\t[ ")
+				out += "\t\t[ "
 				for _, v := range n.lineType {
-					fmt.Printf(v.toString() + " ")
+					out += v.toString() + " "
 				}
-				fmt.Print("]")
+				out += "]"
 			}
 		}
-		fmt.Println()
+		var p interface{}
+		if !config.ColorLess {
+			switch n.status {
+			case ADDED:
+				p = Green(out)
+			case REMOVED:
+				p = Red(out)
+			case CHANGED:
+				p = Yellow(out)
+			default:
+				p = out
+			}
+		} else {
+			p = out
+		}
+		fmt.Println(p)
 
 	}
 	for _, c := range n.children {
