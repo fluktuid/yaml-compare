@@ -96,3 +96,7 @@ modules.xml
 .idea/misc.xml
 *.ipr
 
+
+# Ignore Yamls
+*.yaml
+*.yml
