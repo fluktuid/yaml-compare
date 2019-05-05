@@ -27,7 +27,7 @@ func ToNode(lines []string, config Config) *Node {
 	}
 	rootP.Clean()
 	if config.ResolveAnchors {
-		rootP.resolveAnchors()
+		rootP.resolveAnchors(config)
 	}
 	return rootP
 }

@@ -6,9 +6,9 @@ import (
 	h "yaml-compare/helper"
 )
 
-func (n *Node) resolveAnchors() {
+func (n *Node) resolveAnchors(config Config) {
 	anchors, pointers, objPointers := n.getAnchorsAndPointers()
-	resolve(anchors, pointers, objPointers)
+	resolve(anchors, pointers, objPointers, config)
 }
 
 func (n *Node) getAnchorsAndPointers() (*[]*Node, *[]*Node, *[]*Node) {
@@ -34,12 +34,16 @@ func (n *Node) getAnchorsAndPointers() (*[]*Node, *[]*Node, *[]*Node) {
 	return &anchors, &pointers, &objPointers
 }
 
-func resolve(anchors *[]*Node, pointers *[]*Node, objectPointers *[]*Node) {
+func resolve(anchors *[]*Node, pointers *[]*Node, objectPointers *[]*Node, config Config) {
 	anchorsMap := make(map[string]*Node)
 
 	for _, a := range *anchors {
 		anchorsMap[apValue(&a.Value)] = a
-		a.Value = h.Remove(a.Value, "[&*]\\S+")
+		if config.BewareAnchors {
+			a.Value = h.Remove(a.Value, "\\s+$")
+		} else {
+			a.Value = h.Remove(a.Value, "\\*\\S+\\s+$")
+		}
 	}
 
 	for _, p := range *pointers {
@@ -48,7 +52,11 @@ func resolve(anchors *[]*Node, pointers *[]*Node, objectPointers *[]*Node) {
 		if anc == nil {
 			continue
 		}
-		p.Value = h.Remove(p.Value, "[&*]\\S+")
+		if config.BewarePointer {
+			p.Value = h.Remove(p.Value, "\\s+$")
+		} else {
+			p.Value = h.Remove(p.Value, "\\*\\S+\\s+$")
+		}
 		p.children = append(p.children, anc.children...)
 	}
 
@@ -59,7 +67,9 @@ func resolve(anchors *[]*Node, pointers *[]*Node, objectPointers *[]*Node) {
 			continue
 		}
 		parent := p.parent
-		p.DeleteSelf()
+		if !config.BewarePointer {
+			p.DeleteSelf()
+		}
 		var c []*Node
 		for _, v := range anc.children {
 			index := h.SliceIndex(len(parent.children), func(i int) bool {
@@ -70,7 +80,11 @@ func resolve(anchors *[]*Node, pointers *[]*Node, objectPointers *[]*Node) {
 			}
 		}
 		parent.AddChildren(c...)
-		p.Value = h.Remove(p.Value, "[&*]\\S+")
+		if config.BewarePointer {
+			p.Value = h.Remove(p.Value, "\\s+$")
+		} else {
+			p.Value = h.Remove(p.Value, "\\*\\S+\\s+$")
+		}
 	}
 }
 
@@ -89,7 +103,6 @@ func apValue(s *string) string {
 	return r0.ReplaceAllString(r.FindString(*s), "")
 }
 
-// TODO: test
 func remove(arr *[]*Node, i int) {
 	copy((*arr)[i:], (*arr)[i+1:])
 	(*arr)[len(*arr)-1] = nil // or the zero value of T
