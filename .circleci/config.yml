@@ -84,7 +84,7 @@ jobs:
           paths:
             - .
 
-  build_freebsd_arm64:
+  build_freebsd_amd64:
     working_directory: /go/src/gitub.com/fluktuid/yaml-compare
     docker:
       - image: circleci/golang:1.12
