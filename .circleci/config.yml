@@ -16,7 +16,7 @@ jobs:
       #         path: build/libs/yaml-compare.jar
       # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
-          root: ./out/
+          root: ./out
           # Must be relative path from root
           paths:
             - .
