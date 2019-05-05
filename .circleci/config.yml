@@ -95,7 +95,7 @@ jobs:
           command: go get ./...
       - run:
           name: build project
-          command: env GOOS=freebsd GOARCH=arm64 go build -o=build/freebsd/arm64/yml main/main.go
+          command: env GOOS=freebsd GOARCH=amd64 go build -o=build/freebsd/arm64/yml main/main.go
       #     - store_artifacts:
       #         path: build/libs/yaml-compare.jar
       # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
@@ -105,7 +105,7 @@ jobs:
           paths:
             - .
 
-  build_freebsd_mips:
+  build_linux_mips:
     working_directory: /go/src/gitub.com/fluktuid/yaml-compare
     docker:
       - image: circleci/golang:1.12
@@ -116,7 +116,7 @@ jobs:
           command: go get ./...
       - run:
           name: build project
-          command: env GOOS=freebsd GOARCH=mips go build -o=build/freebsd/mips/yml main/main.go
+          command: env GOOS=linux GOARCH=mips go build -o=build/linux/mips/yml main/main.go
       #     - store_artifacts:
       #         path: build/libs/yaml-compare.jar
       # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
@@ -208,13 +208,13 @@ workflows:
 #          filters:
 #            branches:
 #              only: master
-      - build_freebsd_amd64:
+      - build_linux_mips:
           requires:
             - build
 #          filters:
 #            branches:
 #              only: master
-      - build_freebsd_mips:
+      - build_freebsd_amd64:
           requires:
             - build
 #          filters:
