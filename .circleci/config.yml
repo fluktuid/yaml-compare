@@ -21,6 +21,49 @@ jobs:
           paths:
             - .
 
+  build:
+    working_directory: /go/src/gitub.com/fluktuid/yaml-compare
+    docker:
+      - image: circleci/golang:1.12
+    steps:
+      - checkout
+      - run:
+          name: install dependencies
+          command: go get ./...
+      - run:
+          name: build project
+          command: go build -o=build/yml main/main.go
+      #     - store_artifacts:
+      #         path: build/libs/yaml-compare.jar
+      # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
+      - persist_to_workspace:
+          root: ./out/
+          # Must be relative path from root
+          paths:
+            - .
+
+  build:
+    working_directory: /go/src/gitub.com/fluktuid/yaml-compare
+    docker:
+      - image: circleci/golang:1.12
+    steps:
+      - checkout
+      - run:
+          name: install dependencies
+          command: go get ./...
+      - run:
+          name: build project
+          command: go build -o=build/yml main/main.go
+      #     - store_artifacts:
+      #         path: build/libs/yaml-compare.jar
+      # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
+      - persist_to_workspace:
+          root: ./out/
+          # Must be relative path from root
+          paths:
+            - .
+
+
   publish-release:
     working_directory: /go/src/gitub.com/fluktuid/yaml-compare
     docker:
@@ -41,6 +84,54 @@ workflows:
   build_and_test:
     jobs:
       - build
+      - build_linux_amd64:
+          requires:
+            - build
+#          filters:
+#            branches:
+#              only: master
+      - build_linux_arm:
+          requires:
+            - build
+#          filters:
+#            branches:
+#              only: master
+      - build_linux_arm64:
+          requires:
+            - build
+#          filters:
+#            branches:
+#              only: master
+      - build_freebsd_amd64:
+          requires:
+            - build
+#          filters:
+#            branches:
+#              only: master
+      - build_freebsd_mips:
+          requires:
+            - build
+#          filters:
+#            branches:
+#              only: master
+      - build_freebsd_arm:
+          requires:
+            - build
+#          filters:
+#            branches:
+#              only: master
+      - build_windows_368:
+          requires:
+            - build
+ #         filters:
+ #           branches:
+ #             only: master
+      - build_windows_amd64:
+          requires:
+            - build
+#          filters:
+#            branches:
+#              only: master
       - publish-release:
           context: yaml-compare
           requires:
