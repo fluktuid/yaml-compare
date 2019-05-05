@@ -159,7 +159,9 @@ jobs:
           command: go get ./...
       - run:
           name: build project
-          command: env GOOS=windows GOARCH=amd64 go build -o=build/linux/amd64/yml.exe main/main.go
+#          command: env GOOS=windows GOARCH=amd64 go build -o=build/linux/amd64/yml.exe main/main.go
+          command: pwd && ls && cd build && ls
+
       #     - store_artifacts:
       #         path: build/libs/yaml-compare.jar
       # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
@@ -236,8 +238,15 @@ workflows:
           context: yaml-compare
           requires:
             - build
+            - build_linux_amd64
+            - build_linux_arm
+            - build_linux_arm64
+            - build_linux_mips
+            - build_freebsd_amd64
+            - build_freebsd_arm
+            - build_windows_amd64
           filters:
-            branches:
-              only: master
-            tags:
-              only: /\d+\.\d+\.\d+$/
+#            branches:
+#              only: master
+#            tags:
+#              only: /\d+\.\d+\.\d+$/
