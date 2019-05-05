@@ -1,5 +1,8 @@
 # Yaml Comparator
 
+Master: ![CircleCI](https://circleci.com/gh/fluktuid/yaml-compare/tree/master.svg?style=svg&circle-token=0c4a4b1a381b3523aefc795a09552596cb1c7eea)\
+Develop: ![CircleCI](https://circleci.com/gh/fluktuid/yaml-compare/tree/master.svg?style=svg&circle-token=0c4a4b1a381b3523aefc795a09552596cb1c7eea)
+
 ## Installation
 
 yml-compare is available using the standard go get command.
