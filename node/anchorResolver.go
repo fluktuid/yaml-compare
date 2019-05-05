@@ -1,9 +1,9 @@
 package node
 
 import (
+	h "github.com/fluktuid/yaml-compare/helper"
 	"regexp"
 	"strings"
-	h "yaml-compare/helper"
 )
 
 func (n *Node) resolveAnchors(config Config) {

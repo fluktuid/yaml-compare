@@ -1,9 +1,9 @@
 package node
 
 import (
+	h "github.com/fluktuid/yaml-compare/helper"
 	"reflect"
 	"regexp"
-	h "yaml-compare/helper"
 )
 
 func (n *Node) Compare(other *Node, config Config) *Node {

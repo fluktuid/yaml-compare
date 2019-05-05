@@ -3,10 +3,10 @@ package node
 import (
 	"errors"
 	"fmt"
+	h "github.com/fluktuid/yaml-compare/helper"
 	. "github.com/logrusorgru/aurora"
 	"regexp"
 	"strings"
-	h "yaml-compare/helper"
 )
 
 const FILE = "FILE"

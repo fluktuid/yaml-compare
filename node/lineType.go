@@ -2,8 +2,8 @@ package node
 
 import (
 	"fmt"
+	h "github.com/fluktuid/yaml-compare/helper"
 	"os"
-	h "yaml-compare/helper"
 )
 
 type lineType byte
