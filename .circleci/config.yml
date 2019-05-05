@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: /go/src
+    working_directory: /go/src/gitub.com/fluktuid/yaml-compare
     docker:
       - image: circleci/golang:1.12
     steps:
