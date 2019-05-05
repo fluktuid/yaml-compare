@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/yaml-compare
+    working_directory: /go/src
     docker:
       - image: circleci/golang:1.12
     steps:
