@@ -10,6 +10,9 @@ jobs:
           name: install dependencies
           command: go get ./...
       - run:
+          name: pwd
+          command: pwd && ls
+      - run:
           name: build project
           command: go build main/main.go
 #      - store_artifacts:
