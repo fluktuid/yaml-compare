@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: pwd
-          command: pwd && ls
+          command: pwd && ls && echo $GOPATH
       - run:
           name: install dependencies
           command: go get ./...
