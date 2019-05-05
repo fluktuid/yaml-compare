@@ -238,7 +238,14 @@ workflows:
           context: yaml-compare
           requires:
             - build
-          filters:
+            - build_linux_amd64
+            - build_linux_arm
+            - build_linux_arm64
+            - build_linux_mips
+            - build_freebsd_amd64
+            - build_freebsd_arm
+            - build_windows_amd64
+#          filters:
 #            branches:
 #              only: master
 #            tags:
