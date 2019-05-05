@@ -148,27 +148,6 @@ jobs:
           paths:
             - .
 
-  build_windows_368:
-    working_directory: /go/src/gitub.com/fluktuid/yaml-compare
-    docker:
-      - image: circleci/golang:1.12
-    steps:
-      - checkout
-      - run:
-          name: install dependencies
-          command: go get ./...
-      - run:
-          name: build project
-          command: env GOOS=windows GOARCH=368 go build -o=build/windows/368/yml.exe main/main.go
-      #     - store_artifacts:
-      #         path: build/libs/yaml-compare.jar
-      # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
-      - persist_to_workspace:
-          root: ./build/
-          # Must be relative path from root
-          paths:
-            - .
-
   build_windows_amd64:
     working_directory: /go/src/gitub.com/fluktuid/yaml-compare
     docker:
@@ -247,12 +226,6 @@ workflows:
 #          filters:
 #            branches:
 #              only: master
-      - build_windows_368:
-          requires:
-            - build
- #         filters:
- #           branches:
- #             only: master
       - build_windows_amd64:
           requires:
             - build
