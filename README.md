@@ -76,6 +76,13 @@ $ yml [flags] [file0]
 - [ ] Write Manpage
 - [ ] Add to Package System
     - Homebrew
-    - Pacman
+    - Arch User Repository
 - [ ] Write Manpage
-
+- [ ] Analyze directories
+- [ ] More Flags
+    - [ ] 'No-Change'\
+          Prints changes as _add_ and _remove_
+    - [ ] 'out'\
+          Print diff to file
+    - [ ] 'no-diff-chars'\
+          do not print `+`,`-` and `~`
