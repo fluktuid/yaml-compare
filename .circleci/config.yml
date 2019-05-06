@@ -180,13 +180,15 @@ jobs:
       - run:
           name: "archive files"
           command: |
-            zip win_amd64.zip windows/amd64/yml.exe
-            tar fbsd_arm.tar.gz freebsd/arm/yml
-            tar linux_mips.tar.gz linux/mips/yml
-            tar fbsd_amd64.tar.gz freebsd/amd64/yml
-            tar linux_arm.tar.gz linux/arm/yml
-            tar linux_arm64.tar.gz linux/arm64/yml
-            tar linux_amd64.tar.gz linux/amd64/yml
+            cd build
+            mkdir archives
+            zip archives/win_amd64.zip windows/amd64/yml.exe
+            tar -czf archives/fbsd_arm.tar.gz freebsd/arm/yml
+            tar -czf archives/linux_mips.tar.gz linux/mips/yml
+            tar -czf archives/fbsd_amd64.tar.gz freebsd/amd64/yml
+            tar -czf archives/linux_arm.tar.gz linux/arm/yml
+            tar -czf archives/linux_arm64.tar.gz linux/arm64/yml
+            tar -czf archives/linux_amd64.tar.gz linux/amd64/yml
       - run:
           name: "Publish Release on GitHub"
           command: |
@@ -194,7 +196,7 @@ jobs:
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} \
             -draft \
             $(git describe --tags) \
-            build/
+            build/archives
 #            linux/amd64/yml linux/arm/yml linux/arm64/yml freebsd/arm64/yml freebsd/arm/yml windows/amd64/yml.exe\
 
 workflows:
