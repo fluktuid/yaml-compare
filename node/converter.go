@@ -8,6 +8,7 @@ type Config struct {
 	printFull         bool
 	FullQualifierName bool
 	PrintComplete     bool
+	PrintFiles        bool
 	ColorLess         bool
 }
 
