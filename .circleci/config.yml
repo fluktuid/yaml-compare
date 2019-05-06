@@ -1,0 +1,242 @@
+version: 2
+jobs:
+  build:
+    working_directory: /go/src/gitub.com/fluktuid/yaml-compare
+    docker:
+      - image: circleci/golang:1.12
+    steps:
+      - checkout
+      - run:
+          name: install dependencies
+          command: go get ./...
+      - run:
+          name: build project
+          command: go build -o=build/yml main/main.go
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./build/
+
+  build_linux_amd64:
+    working_directory: /go/src/gitub.com/fluktuid/yaml-compare
+    docker:
+      - image: circleci/golang:1.12
+    steps:
+      - checkout
+      - run:
+          name: install dependencies
+          command: go get ./...
+      - run:
+          name: build project
+          command: env GOOS=linux GOARCH=amd64 go build -o=build/linux/amd64/yml main/main.go
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./build/
+
+  build_linux_arm:
+    working_directory: /go/src/gitub.com/fluktuid/yaml-compare
+    docker:
+      - image: circleci/golang:1.12
+    steps:
+      - checkout
+      - run:
+          name: install dependencies
+          command: go get ./...
+      - run:
+          name: build project
+          command: env GOOS=linux GOARCH=arm go build -o=build/linux/arm/yml main/main.go
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./build/
+
+  build_linux_arm64:
+    working_directory: /go/src/gitub.com/fluktuid/yaml-compare
+    docker:
+      - image: circleci/golang:1.12
+    steps:
+      - checkout
+      - run:
+          name: install dependencies
+          command: go get ./...
+      - run:
+          name: build project
+          command: env GOOS=linux GOARCH=arm64 go build -o=build/linux/arm64/yml main/main.go
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./build/
+
+  build_linux_mips:
+    working_directory: /go/src/gitub.com/fluktuid/yaml-compare
+    docker:
+      - image: circleci/golang:1.12
+    steps:
+      - checkout
+      - run:
+          name: install dependencies
+          command: go get ./...
+      - run:
+          name: build project
+          command: env GOOS=linux GOARCH=mips go build -o=build/linux/mips/yml main/main.go
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./build/
+
+  build_freebsd_amd64:
+    working_directory: /go/src/gitub.com/fluktuid/yaml-compare
+    docker:
+      - image: circleci/golang:1.12
+    steps:
+      - checkout
+      - run:
+          name: install dependencies
+          command: go get ./...
+      - run:
+          name: build project
+          command: env GOOS=freebsd GOARCH=amd64 go build -o=build/freebsd/amd64/yml main/main.go
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./build/
+
+  build_freebsd_arm:
+    working_directory: /go/src/gitub.com/fluktuid/yaml-compare
+    docker:
+      - image: circleci/golang:1.12
+    steps:
+      - checkout
+      - run:
+          name: install dependencies
+          command: go get ./...
+      - run:
+          name: build project
+          command: env GOOS=freebsd GOARCH=arm go build -o=build/freebsd/arm/yml main/main.go
+      #     - store_artifacts:
+      #         path: build/libs/yaml-compare.jar
+      # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
+      - persist_to_workspace:
+          root: .
+          # Must be relative path from root
+          paths:
+            - ./build/
+
+  build_windows_amd64:
+    working_directory: /go/src/gitub.com/fluktuid/yaml-compare
+    docker:
+      - image: circleci/golang:1.12
+    steps:
+      - checkout
+      - run:
+          name: install dependencies
+          command: go get ./...
+      - run:
+          name: build project
+          command: env GOOS=windows GOARCH=amd64 go build -o=build/windows/amd64/yml.exe main/main.go
+#          command: pwd && ls && cd build && ls
+
+      #     - store_artifacts:
+      #         path: build/libs/yaml-compare.jar
+      # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
+      - persist_to_workspace:
+          root: .
+          # Must be relative path from root
+          paths:
+            - ./build/
+
+  publish-release:
+    working_directory: /go/src/gitub.com/fluktuid/yaml-compare
+    docker:
+      - image: circleci/golang:1.12
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: "archive files"
+          command: |
+            cd build
+            mkdir archives
+            zip archives/win_amd64.zip windows/amd64/yml.exe
+            tar -czvf archives/fbsd_arm.tar.gz freebsd/arm/yml
+            tar -czvf archives/linux_mips.tar.gz linux/mips/yml
+            tar -czvf archives/fbsd_amd64.tar.gz freebsd/amd64/yml
+            tar -czvf archives/linux_arm.tar.gz linux/arm/yml
+            tar -czvf archives/linux_arm64.tar.gz linux/arm64/yml
+            tar -czvf archives/linux_amd64.tar.gz linux/amd64/yml
+            cd ..
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            go get github.com/tcnksm/ghr
+            export TAG="$(git describe --tags)"
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} \
+            -draft \
+            $TAG \
+            build/archives
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - build_linux_amd64:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+      - build_linux_arm:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+      - build_linux_arm64:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+      - build_linux_mips:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+      - build_freebsd_amd64:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+      - build_freebsd_arm:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+      - build_windows_amd64:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+      - publish-release:
+          context: yaml-compare
+          requires:
+            - build
+            - build_linux_amd64
+            - build_linux_arm
+            - build_linux_arm64
+            - build_linux_mips
+            - build_freebsd_amd64
+            - build_freebsd_arm
+            - build_windows_amd64
+          filters:
+            branches:
+              only: master
+            tags:
+              only: /\d+\.\d+\.\d+$/
