@@ -1,8 +1,8 @@
 package node
 
 import (
+	h "../helper"
 	"fmt"
-	h "github.com/fluktuid/yaml-compare/helper"
 	"os"
 )
 

@@ -1,7 +1,7 @@
 package node
 
 import (
-	h "github.com/fluktuid/yaml-compare/helper"
+	h "../helper"
 	"reflect"
 	"regexp"
 )

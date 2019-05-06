@@ -1,9 +1,9 @@
 package node
 
 import (
+	h "../helper"
 	"errors"
 	"fmt"
-	h "github.com/fluktuid/yaml-compare/helper"
 	. "github.com/logrusorgru/aurora"
 	"regexp"
 	"strings"

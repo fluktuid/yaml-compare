@@ -1,10 +1,10 @@
 package yaml_compare
 
 import (
+	"./files"
+	"./node"
 	"errors"
 	"fmt"
-	"github.com/fluktuid/yaml-compare/files"
-	"github.com/fluktuid/yaml-compare/node"
 	. "github.com/logrusorgru/aurora"
 	flag "github.com/spf13/pflag"
 	"os"
