@@ -16,10 +16,10 @@ jobs:
       #         path: build/libs/yaml-compare.jar
       # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
-          root: ./
+          root: .
           # Must be relative path from root
           paths:
-            - .
+            - ./build/
 
   build_linux_amd64:
     working_directory: /go/src/gitub.com/fluktuid/yaml-compare
@@ -37,10 +37,10 @@ jobs:
       #         path: build/libs/yaml-compare.jar
       # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
-          root: ./
+          root: .
           # Must be relative path from root
           paths:
-            - .
+            - ./build/
 
   build_linux_arm:
     working_directory: /go/src/gitub.com/fluktuid/yaml-compare
@@ -58,10 +58,10 @@ jobs:
       #         path: build/libs/yaml-compare.jar
       # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
-          root: ./
+          root: .
           # Must be relative path from root
           paths:
-            - .
+            - ./build/
 
   build_linux_arm64:
     working_directory: /go/src/gitub.com/fluktuid/yaml-compare
@@ -79,10 +79,10 @@ jobs:
       #         path: build/libs/yaml-compare.jar
       # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
-          root: ./
+          root: .
           # Must be relative path from root
           paths:
-            - .
+            - ./build/
 
   build_freebsd_amd64:
     working_directory: /go/src/gitub.com/fluktuid/yaml-compare
@@ -100,10 +100,10 @@ jobs:
       #         path: build/libs/yaml-compare.jar
       # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
-          root: ./build/
+          root: .
           # Must be relative path from root
           paths:
-            - .
+            - ./build/
 
   build_linux_mips:
     working_directory: /go/src/gitub.com/fluktuid/yaml-compare
@@ -121,10 +121,10 @@ jobs:
       #         path: build/libs/yaml-compare.jar
       # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
-          root: ./
+          root: .
           # Must be relative path from root
           paths:
-            - .
+            - ./build/
 
 
   build_freebsd_arm:
@@ -143,10 +143,10 @@ jobs:
       #         path: build/libs/yaml-compare.jar
       # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
-          root: ./
+          root: .
           # Must be relative path from root
           paths:
-            - .
+            - ./build/
 
   build_windows_amd64:
     working_directory: /go/src/gitub.com/fluktuid/yaml-compare
@@ -166,10 +166,10 @@ jobs:
       #         path: build/libs/yaml-compare.jar
       # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
-          root: ./
+          root: .
           # Must be relative path from root
           paths:
-            - .
+            - ./build/
 
   publish-release:
     working_directory: /go/src/gitub.com/fluktuid/yaml-compare
