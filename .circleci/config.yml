@@ -189,6 +189,7 @@ jobs:
             tar -czvf archives/linux_arm.tar.gz linux/arm/yml
             tar -czvf archives/linux_arm64.tar.gz linux/arm64/yml
             tar -czvf archives/linux_amd64.tar.gz linux/amd64/yml
+            cd ..
       - run:
           name: "Publish Release on GitHub"
           command: |
