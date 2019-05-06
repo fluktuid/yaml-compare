@@ -155,17 +155,28 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: "tag name"
+          command: |
+            TAG=$(git describe --tags --abbrev=0)
+            CURRENT_COMMIT=$(git rev-parse HEAD)
+            TAG_COMMIT=$(git rev-list -n 1 $TAG)
+            if [ $CURRENT_COMMIT = $TAG_COMMIT ]; then
+              TAG_NAME=$TAG
+            else
+              TAG_NAME=$TAG-preview
+            fi
+      - run:
           name: "archive files"
           command: |
             cd build
             mkdir archives
-            zip archives/win_amd64.zip windows/amd64/yml.exe
-            tar -czvf archives/fbsd_arm.tar.gz freebsd/arm/yml
-            tar -czvf archives/linux_mips.tar.gz linux/mips/yml
-            tar -czvf archives/fbsd_amd64.tar.gz freebsd/amd64/yml
-            tar -czvf archives/linux_arm.tar.gz linux/arm/yml
-            tar -czvf archives/linux_arm64.tar.gz linux/arm64/yml
-            tar -czvf archives/linux_amd64.tar.gz linux/amd64/yml
+            zip archives/yc-$TAG_NAME-win_amd64.zip windows/amd64/yml.exe
+            tar -czvf archives/yc-$TAG_NAME-fbsd_arm.tar.gz freebsd/arm/yml
+            tar -czvf archives/yc-$TAG_NAME-linux_mips.tar.gz linux/mips/yml
+            tar -czvf archives/yc-$TAG_NAME-fbsd_amd64.tar.gz freebsd/amd64/yml
+            tar -czvf archives/yc-$TAG_NAME-linux_arm.tar.gz linux/arm/yml
+            tar -czvf archives/yc-$TAG_NAME-linux_arm64.tar.gz linux/arm64/yml
+            tar -czvf archives/yc-$TAG_NAME-linux_amd64.tar.gz linux/amd64/yml
             cd ..
       - run:
           name: "Publish Release on GitHub"
@@ -178,7 +189,6 @@ jobs:
             if [ $CURRENT_COMMIT = $TAG_COMMIT ]; then
               ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} \
               -draft \
-              -soft \
               $TAG \
               build/archives
             else
