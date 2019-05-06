@@ -13,11 +13,13 @@ import (
 func main() {
 	config, arguments := getFlags()
 
-	if len(arguments) < 1 || len(arguments) > 2 {
+	if len(arguments) < 1 {
 		_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", errors.New("please specify one or two Files"))
 		flag.Usage()
 		os.Exit(1)
 		return
+	} else if len(arguments) > 2 {
+		fmt.Println("warining: I got more than two files. I will compare them step by step.")
 	}
 
 	var roots []*node.Node
@@ -28,12 +30,23 @@ func main() {
 			fmt.Println(file)
 			n.PrintBy(0, config)
 			fmt.Println("==========")
+			fmt.Println()
 		}
 		roots = append(roots, n)
 	}
-	if len(arguments) == 2 {
-		difference := roots[0].Compare(roots[1], config)
-		difference.PrintBy(1, config)
+	if len(arguments) > 1 {
+		for i := 1; i < len(roots); i++ {
+			if i > 1 {
+				fmt.Println()
+			}
+			if config.ColorLess {
+				fmt.Printf("%v => %v\n", arguments[i-1], arguments[i])
+			} else {
+				fmt.Println(Underline(arguments[i-1] + " => " + arguments[i]))
+			}
+			difference := roots[i-1].Compare(roots[i], config)
+			difference.PrintBy(1, config)
+		}
 	}
 }
 
