@@ -77,4 +77,5 @@ $ yml [flags] [file0]
 - [ ] Add to Package System
     - Homebrew
     - Pacman
+- [ ] Write Manpage
 
