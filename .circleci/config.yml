@@ -16,7 +16,7 @@ jobs:
       #         path: build/libs/yaml-compare.jar
       # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
-          root: ./build/
+          root: ./
           # Must be relative path from root
           paths:
             - .
@@ -37,7 +37,7 @@ jobs:
       #         path: build/libs/yaml-compare.jar
       # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
-          root: ./build/
+          root: ./
           # Must be relative path from root
           paths:
             - .
@@ -58,7 +58,7 @@ jobs:
       #         path: build/libs/yaml-compare.jar
       # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
-          root: ./build/
+          root: ./
           # Must be relative path from root
           paths:
             - .
@@ -79,7 +79,7 @@ jobs:
       #         path: build/libs/yaml-compare.jar
       # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
-          root: ./build/
+          root: ./
           # Must be relative path from root
           paths:
             - .
@@ -121,7 +121,7 @@ jobs:
       #         path: build/libs/yaml-compare.jar
       # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
-          root: ./build/
+          root: ./
           # Must be relative path from root
           paths:
             - .
@@ -143,7 +143,7 @@ jobs:
       #         path: build/libs/yaml-compare.jar
       # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
-          root: ./build/
+          root: ./
           # Must be relative path from root
           paths:
             - .
@@ -166,7 +166,7 @@ jobs:
       #         path: build/libs/yaml-compare.jar
       # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
-          root: ./build/
+          root: ./
           # Must be relative path from root
           paths:
             - .
@@ -186,7 +186,10 @@ jobs:
           command: |
             go get github.com/tcnksm/ghr
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_BUILD_NUM}\
-            linux/amd64/yml linux/arm/yml linux/arm64/yml freebsd/arm64/yml freebsd/arm/yml windows/amd64/yml.exe
+            -draft \
+            $(git describe --tags) \
+            build/
+#            linux/amd64/yml linux/arm/yml linux/arm64/yml freebsd/arm64/yml freebsd/arm/yml windows/amd64/yml.exe\
 
 workflows:
   version: 2
