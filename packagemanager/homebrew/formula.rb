@@ -1,4 +1,4 @@
-class Yaml-Compare < Formula
+class YamlCompare < Formula
   desc "A command line tool to compare two yaml files"
   homepage "https://github.com/fluktuid/yaml-compare"
   url "https://github.com/fluktuid/yaml-compare/archive/0.0.0.tar.gz"
