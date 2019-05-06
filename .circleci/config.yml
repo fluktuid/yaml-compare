@@ -12,12 +12,8 @@ jobs:
       - run:
           name: build project
           command: go build -o=build/yml main/main.go
-      #     - store_artifacts:
-      #         path: build/libs/yaml-compare.jar
-      # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
           root: .
-          # Must be relative path from root
           paths:
             - ./build/
 
@@ -33,12 +29,8 @@ jobs:
       - run:
           name: build project
           command: env GOOS=linux GOARCH=amd64 go build -o=build/linux/amd64/yml main/main.go
-      #     - store_artifacts:
-      #         path: build/libs/yaml-compare.jar
-      # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
           root: .
-          # Must be relative path from root
           paths:
             - ./build/
 
@@ -54,12 +46,8 @@ jobs:
       - run:
           name: build project
           command: env GOOS=linux GOARCH=arm go build -o=build/linux/arm/yml main/main.go
-      #     - store_artifacts:
-      #         path: build/libs/yaml-compare.jar
-      # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
           root: .
-          # Must be relative path from root
           paths:
             - ./build/
 
@@ -75,12 +63,8 @@ jobs:
       - run:
           name: build project
           command: env GOOS=linux GOARCH=arm64 go build -o=build/linux/arm64/yml main/main.go
-      #     - store_artifacts:
-      #         path: build/libs/yaml-compare.jar
-      # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
           root: .
-          # Must be relative path from root
           paths:
             - ./build/
 
@@ -96,12 +80,8 @@ jobs:
       - run:
           name: build project
           command: env GOOS=linux GOARCH=mips go build -o=build/linux/mips/yml main/main.go
-      #     - store_artifacts:
-      #         path: build/libs/yaml-compare.jar
-      # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
           root: .
-          # Must be relative path from root
           paths:
             - ./build/
 
@@ -117,12 +97,8 @@ jobs:
       - run:
           name: build project
           command: env GOOS=freebsd GOARCH=amd64 go build -o=build/freebsd/amd64/yml main/main.go
-      #     - store_artifacts:
-      #         path: build/libs/yaml-compare.jar
-      # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
       - persist_to_workspace:
           root: .
-          # Must be relative path from root
           paths:
             - ./build/
 
@@ -200,7 +176,6 @@ jobs:
             -draft \
             $TAG \
             build/archives
-#            linux/amd64/yml linux/arm/yml linux/arm64/yml freebsd/arm64/yml freebsd/arm/yml windows/amd64/yml.exe\
 
 workflows:
   version: 2
@@ -210,45 +185,45 @@ workflows:
       - build_linux_amd64:
           requires:
             - build
-#          filters:
-#            branches:
-#              only: master
+          filters:
+            branches:
+              only: master
       - build_linux_arm:
           requires:
             - build
-#          filters:
-#            branches:
-#              only: master
+          filters:
+            branches:
+              only: master
       - build_linux_arm64:
           requires:
             - build
-#          filters:
-#            branches:
-#              only: master
+          filters:
+            branches:
+              only: master
       - build_linux_mips:
           requires:
             - build
-#          filters:
-#            branches:
-#              only: master
+          filters:
+            branches:
+              only: master
       - build_freebsd_amd64:
           requires:
             - build
-#          filters:
-#            branches:
-#              only: master
+          filters:
+            branches:
+              only: master
       - build_freebsd_arm:
           requires:
             - build
-#          filters:
-#            branches:
-#              only: master
+          filters:
+            branches:
+              only: master
       - build_windows_amd64:
           requires:
             - build
-#          filters:
-#            branches:
-#              only: master
+          filters:
+            branches:
+              only: master
       - publish-release:
           context: yaml-compare
           requires:
@@ -260,8 +235,8 @@ workflows:
             - build_freebsd_amd64
             - build_freebsd_arm
             - build_windows_amd64
-#          filters:
-#            branches:
-#              only: master
-#            tags:
-#              only: /\d+\.\d+\.\d+$/
+          filters:
+            branches:
+              only: master
+            tags:
+              only: /\d+\.\d+\.\d+$/
