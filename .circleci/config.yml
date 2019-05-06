@@ -116,7 +116,7 @@ jobs:
           command: go get ./...
       - run:
           name: build project
-          command: env GOOS=freebsd GOARCH=amd64 go build -o=build/freebsd/arm64/yml main/main.go
+          command: env GOOS=freebsd GOARCH=amd64 go build -o=build/freebsd/amd64/yml main/main.go
       #     - store_artifacts:
       #         path: build/libs/yaml-compare.jar
       # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
@@ -183,12 +183,12 @@ jobs:
             cd build
             mkdir archives
             zip archives/win_amd64.zip windows/amd64/yml.exe
-            tar -czf archives/fbsd_arm.tar.gz freebsd/arm/yml
-            tar -czf archives/linux_mips.tar.gz linux/mips/yml
-            tar -czf archives/fbsd_amd64.tar.gz freebsd/amd64/yml
-            tar -czf archives/linux_arm.tar.gz linux/arm/yml
-            tar -czf archives/linux_arm64.tar.gz linux/arm64/yml
-            tar -czf archives/linux_amd64.tar.gz linux/amd64/yml
+            tar -czvf archives/fbsd_arm.tar.gz freebsd/arm/yml
+            tar -czvf archives/linux_mips.tar.gz linux/mips/yml
+            tar -czvf archives/fbsd_amd64.tar.gz freebsd/amd64/yml
+            tar -czvf archives/linux_arm.tar.gz linux/arm/yml
+            tar -czvf archives/linux_arm64.tar.gz linux/arm64/yml
+            tar -czvf archives/linux_amd64.tar.gz linux/amd64/yml
       - run:
           name: "Publish Release on GitHub"
           command: |
