@@ -1,4 +1,4 @@
-package yaml_compare
+package main
 
 import (
 	"./files"
@@ -29,7 +29,6 @@ func main() {
 		os.Exit(0)
 		return
 	}
-	flag.Usage()
 	arguments := flag.Args()
 	if len(arguments) < 1 || len(arguments) > 2 {
 		_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", errors.New("please specify one or two Files"))
