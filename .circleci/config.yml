@@ -181,14 +181,12 @@ jobs:
       - run:
           name: pwd
           command: pwd && ls && echo $GOPATH
-#      - run:
-#          name: "Publish Release on GitHub"
-#          command: |
-#            go get github.com/tcnksm/ghr
-#            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_BUILD_NUM}
       - run:
-          name: "ls"
-          command: pwd && ls && cd build && ls
+          name: "Publish Release on GitHub"
+          command: |
+            go get github.com/tcnksm/ghr
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_BUILD_NUM}\
+            linux/amd64/yml linux/arm/yml linux/arm64/yml freebsd/arm64/yml freebsd/arm/yml windows/amd64/yml.exe
 
 workflows:
   version: 2
