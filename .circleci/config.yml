@@ -11,7 +11,7 @@ jobs:
           command: go get ./...
       - run:
           name: build project
-          command: go build -o=build/yml main/main.go
+          command: go build -o=build/yml main.go
       - persist_to_workspace:
           root: .
           paths:
@@ -28,7 +28,7 @@ jobs:
           command: go get ./...
       - run:
           name: build project
-          command: env GOOS=linux GOARCH=amd64 go build -o=build/linux/amd64/yml main/main.go
+          command: env GOOS=linux GOARCH=amd64 go build -o=build/linux/amd64/yml main.go
       - persist_to_workspace:
           root: .
           paths:
@@ -45,7 +45,7 @@ jobs:
           command: go get ./...
       - run:
           name: build project
-          command: env GOOS=linux GOARCH=arm go build -o=build/linux/arm/yml main/main.go
+          command: env GOOS=linux GOARCH=arm go build -o=build/linux/arm/yml main.go
       - persist_to_workspace:
           root: .
           paths:
@@ -62,7 +62,7 @@ jobs:
           command: go get ./...
       - run:
           name: build project
-          command: env GOOS=linux GOARCH=arm64 go build -o=build/linux/arm64/yml main/main.go
+          command: env GOOS=linux GOARCH=arm64 go build -o=build/linux/arm64/yml main.go
       - persist_to_workspace:
           root: .
           paths:
@@ -79,7 +79,7 @@ jobs:
           command: go get ./...
       - run:
           name: build project
-          command: env GOOS=linux GOARCH=mips go build -o=build/linux/mips/yml main/main.go
+          command: env GOOS=linux GOARCH=mips go build -o=build/linux/mips/yml main.go
       - persist_to_workspace:
           root: .
           paths:
@@ -96,7 +96,7 @@ jobs:
           command: go get ./...
       - run:
           name: build project
-          command: env GOOS=freebsd GOARCH=amd64 go build -o=build/freebsd/amd64/yml main/main.go
+          command: env GOOS=freebsd GOARCH=amd64 go build -o=build/freebsd/amd64/yml main.go
       - persist_to_workspace:
           root: .
           paths:
@@ -113,7 +113,7 @@ jobs:
           command: go get ./...
       - run:
           name: build project
-          command: env GOOS=freebsd GOARCH=arm go build -o=build/freebsd/arm/yml main/main.go
+          command: env GOOS=freebsd GOARCH=arm go build -o=build/freebsd/arm/yml main.go
       #     - store_artifacts:
       #         path: build/libs/yaml-compare.jar
       # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
@@ -134,7 +134,7 @@ jobs:
           command: go get ./...
       - run:
           name: build project
-          command: env GOOS=windows GOARCH=amd64 go build -o=build/windows/amd64/yml.exe main/main.go
+          command: env GOOS=windows GOARCH=amd64 go build -o=build/windows/amd64/yml.exe main.go
 #          command: pwd && ls && cd build && ls
 
       #     - store_artifacts:
