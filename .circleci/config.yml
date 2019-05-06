@@ -159,8 +159,8 @@ jobs:
           command: go get ./...
       - run:
           name: build project
-#          command: env GOOS=windows GOARCH=amd64 go build -o=build/linux/amd64/yml.exe main/main.go
-          command: pwd && ls && cd build && ls
+          command: env GOOS=windows GOARCH=amd64 go build -o=build/linux/amd64/yml.exe main/main.go
+#          command: pwd && ls && cd build && ls
 
       #     - store_artifacts:
       #         path: build/libs/yaml-compare.jar
@@ -181,11 +181,14 @@ jobs:
       - run:
           name: pwd
           command: pwd && ls && echo $GOPATH
+#      - run:
+#          name: "Publish Release on GitHub"
+#          command: |
+#            go get github.com/tcnksm/ghr
+#            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_BUILD_NUM}
       - run:
-          name: "Publish Release on GitHub"
-          command: |
-            go get github.com/tcnksm/ghr
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_BUILD_NUM}
+          name: "ls"
+          command: pwd && ls && cd build && ls
 
 workflows:
   version: 2
