@@ -178,12 +178,13 @@ jobs:
             if [ $CURRENT_COMMIT = $TAG_COMMIT ]; then
               ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} \
               -draft \
-              $TAG-SNAPSHOT \
+              -soft \
+              $TAG \
               build/archives
             else
               ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} \
-              -draft \
-              $TAG \
+              -prerelease \
+              $TAG-SNAPSHOT \
               build/archives
             fi
 
@@ -197,43 +198,57 @@ workflows:
             - build
           filters:
             branches:
-              only: master
+              only:
+                - dev
+                - master
       - build_linux_arm:
           requires:
             - build
           filters:
             branches:
-              only: master
+              only:
+                - dev
+                - master
       - build_linux_arm64:
           requires:
             - build
           filters:
             branches:
-              only: master
+              only:
+                - dev
+                - master
       - build_linux_mips:
           requires:
             - build
           filters:
             branches:
-              only: master
+              only:
+                - dev
+                - master
       - build_freebsd_amd64:
           requires:
             - build
           filters:
             branches:
-              only: master
+              only:
+                - dev
+                - master
       - build_freebsd_arm:
           requires:
             - build
           filters:
             branches:
-              only: master
+              only:
+                - dev
+                - master
       - build_windows_amd64:
           requires:
             - build
           filters:
             branches:
-              only: master
+              only:
+                - dev
+                - master
       - publish-release:
           context: yaml-compare
           requires:
