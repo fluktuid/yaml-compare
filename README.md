@@ -13,6 +13,15 @@ Install by running:\
 Run tests by running:\
 `There are currently no tests`
 
+
+### Homebrew
+
+- Add my tap\
+  `brew tap fluktuid/tap`
+- install project
+  `brew install yaml-compare`
+
+
 ### As executable (compile yourself)
 ``` bash
 $ cd $GOPATH/src/yaml-compare/main
