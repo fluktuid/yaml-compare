@@ -79,6 +79,8 @@ $ yml [flags] [file0]
     - Arch User Repository
 - [ ] Write Manpage
 - [ ] Analyze directories
+    - [x] basic
+    - [ ] compare by file names
 - [ ] More Flags
     - [ ] 'No-Change'\
           Prints changes as _add_ and _remove_

@@ -38,6 +38,11 @@ func MapListString(s string, position int) *string {
 	return &s
 }
 
+func YmlFile(s string) bool {
+	r, _ := regexp.Compile(".*\\.ya?ml$")
+	return r.MatchString(s)
+}
+
 func Remove(s string, regex string) string {
 	r, e := regexp.Compile(regex)
 	if e != nil {

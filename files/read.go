@@ -1,21 +1,43 @@
 package files
 
 import (
+	"../helper"
 	"bufio"
 	"bytes"
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 )
 
-func ReadFileWithReadLine(fn string) ([]string, error) {
+func Read(fn ...string) ([]*File, error) {
+	var paths []string
+	var files []*File
+	for _, v := range fn {
+		p, err := readAllFilesInDirectory(v)
+		if err != nil {
+			return nil, err
+		}
+		paths = append(paths, p...)
+	}
+	for _, v := range paths {
+		file, err := readFileWithReadLine(v)
+		if err != nil {
+			return nil, err
+		}
+		files = append(files, file)
+	}
+	return files, nil
+}
+
+func readFileWithReadLine(fn string) (*File, error) {
 	var rows []string
 
 	file, err := os.Open(fn)
 	defer file.Close()
 
 	if err != nil {
-		return rows, err
+		return nil, err
 	}
 
 	// Start reading from the file with a reader.
@@ -56,5 +78,19 @@ func ReadFileWithReadLine(fn string) ([]string, error) {
 		fmt.Printf(" > Failed!: %v\n", err)
 	}
 
-	return rows, nil
+	return &File{Name: fn, Lines: rows}, nil
+}
+
+func readAllFilesInDirectory(path string) ([]string, error) {
+	var files []string
+	err := filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+		if helper.YmlFile(path) {
+			files = append(files, path)
+		}
+		return nil
+	})
+	if err != nil {
+		panic(err)
+	}
+	return files, err
 }

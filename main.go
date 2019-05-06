@@ -23,28 +23,29 @@ func main() {
 	}
 
 	var roots []*node.Node
-	for _, file := range arguments {
-		lines, _ := files.ReadFileWithReadLine(file)
-		n := node.ToNode(lines, config)
-		if config.PrintFiles || len(arguments) == 1 {
-			fmt.Println(file)
+	fls, _ := files.Read(arguments...)
+	for _, file := range fls {
+		n := node.ToNode(file.Lines, config)
+		if config.PrintFiles || len(fls) == 1 {
+			fmt.Printf("File: %v\n", file.Name)
+			fmt.Println(file.Lines)
 			n.PrintBy(0, config)
 			fmt.Println("==========")
 			fmt.Println()
 		}
 		roots = append(roots, n)
 	}
-	if len(arguments) > 1 {
+	if len(fls) > 1 {
 		for i := 1; i < len(roots); i++ {
 			if i > 1 {
 				fmt.Println()
 			}
 			if config.ColorLess {
-				fmt.Printf("%v => %v\n", arguments[i-1], arguments[i])
+				fmt.Printf("%v => %v\n", fls[i-1].Name, fls[i].Name)
 			} else {
-				fmt.Println(Underline(arguments[i-1] + " => " + arguments[i]))
+				fmt.Println(Underline(fls[i-1].Name + " => " + fls[i].Name))
 			}
-			difference := roots[i-1].Compare(roots[i], config)
+			difference := roots[i].Compare(roots[i-1], config)
 			difference.PrintBy(1, config)
 		}
 	}
